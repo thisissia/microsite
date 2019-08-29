@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<h1>Please label your conversation and do not leave this page without submitting or cancelling</h1>
+    <form action="" method="post" name="form" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div>
+                    <table>
+                        <tr>
+                            <th> Name </th>
+                            <th> Type </th>
+                        </tr>
+                        {% for file in form.files %}
+                        <tr>
+                            <td>{{ file.file_name }}</td>
+                            <td>{{ file.types }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <p><input type="submit" name="edit" value="Update!"></p>
+                <p><input type="submit" name="edit" value="Cancel!"></p>
+            </form>
+
+
+{% endblock %}
+
