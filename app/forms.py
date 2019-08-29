@@ -34,7 +34,7 @@ class Testing(FlaskForm):
 
 class Update(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), model_duplicate2])
-    files = FileField('New files upload', validators=[DataRequired(), xlsxpars])
+    files = FileField('New files upload', validators=[DataRequired()])
     submit = SubmitField('Update!')
 
 
