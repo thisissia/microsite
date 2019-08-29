@@ -2,7 +2,7 @@ from app import app, db
 from app.forms import Name, Uploads, Testing, Update, Update2, filesType
 from flask import render_template, flash, redirect, session, url_for, request
 from app.models import Classifier, Conversation
-from app.aux_functions import xlsxparser, worker
+from app.aux_functions import xlsxparser, worker, xlsxpars, xlsxpars2
 import threading, queue, pandas as pd, json
 
 
@@ -39,7 +39,15 @@ def testing():
     name = session['classif_name']
     if form.validate_on_submit():
         try:
-            df = pd.read_excel(form.files.data, header=[0, 1])
+            value = xlsxpars(form.files)
+
+            if not value[0]:
+                flash(value[1])
+                return render_template('testing.html', title='Test your files with the classifier', form=form,
+                                       name=name)
+            else:
+                df = value[1]
+
             gap, duration, ts, te, si = xlsxparser(df)
             file_name = df.columns.levels[0].values
 
@@ -96,8 +104,18 @@ def newClassifier():
 
     if form.validate_on_submit():
         try:
-            g_df = pd.read_excel(form.good.data, header=[0,1])
-            b_df = pd.read_excel(form.bad.data, header=[0,1])
+            value1 = xlsxpars(form.good)
+            value2 = xlsxpars(form.bad)
+
+            if not value1[0]:
+                flash(value1[1])
+                return render_template('uploads.html', title='Make a new classifier!', form=form)
+            elif not value2[0]:
+                flash(value2[1])
+                return render_template('uploads.html', title='Make a new classifier!', form=form)
+            else:
+                g_df = value1[1]
+                b_df = value2[1]
 
             newModel = Classifier(name=form.name.data)
             db.session.add(newModel)
@@ -149,7 +167,13 @@ def update():
     form = Update()
     if form.validate_on_submit():
         session['classif_name'] = form.name.data
-        df = pd.read_excel(form.files.data, header=[0, 1])
+        value = xlsxpars2(form.files)
+        if not value[0]:
+            flash(value[1])
+            return render_template('specificClassifier/update.html', form=form)
+        else:
+            df = value[1]
+
         file_names = df.columns.levels[0].values
         gaps, duration, ts, te, si = xlsxparser(df)
         data = {'file_name':[]}

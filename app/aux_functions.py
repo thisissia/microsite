@@ -55,6 +55,34 @@ def get_durations(file):
     return gaps, duration, ts, te, si
 
 
+def xlsxpars(field):
+    try:
+        df = pd.read_excel(field.data, header=[0,1])
+        df_headers = df.columns.levels[0].values
+        for file_name in df_headers:
+            if len(df[file_name].count()) != 4:
+                return [False, "Conversation names not unique or the file is not correctly formatted."]
+        if len(df.columns.levels[1].values) != 4:
+            return [False, "Conversation names not unique or the file is not correctly formatted."]
+
+        if not {'time_start', 'time_end', 'time_diff', 'speaker_id'}.issubset(df.columns.levels[1].values):
+            return [False, "File must have the following sub-heading: time_start, time_end, time_diff and speaker_id."]
+        return [True, df]
+    except:
+        return [False, "File is not in the correct format."]
+
+
+def xlsxpars2(field):
+    try:
+        df = pd.read_excel(field.data, header=[0,1])
+        if len(df.columns.levels[1].values) != 4:
+            return [False, "Conversation names not unique or the file is not correctly formatted."]
+
+        if not {'time_start', 'time_end', 'time_diff', 'speaker_id'}.issubset(df.columns.levels[1].values):
+            return [False, "File must have the following sub-heading: time_start, time_end, time_diff and speaker_id."]
+        return [True, df]
+    except:
+        return [False, "File is not in the correct format"]
 
 
 
