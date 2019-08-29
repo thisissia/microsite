@@ -12,6 +12,7 @@ def index():
         db.session.query(Conversation).all()
         flash('worked')
     except Exception as e:
+
         flash(e)
     session['classif_name'] = None
     return render_template('index.html', title='Home')
