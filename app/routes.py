@@ -8,6 +8,11 @@ import threading, queue, pandas as pd, json
 @app.route('/')
 @app.route('/index')
 def index():
+    try:
+        db.session.query(Conversation).all()
+        flash('worked')
+    except Exception as e:
+        flash(e)
     session['classif_name'] = None
     return render_template('index.html', title='Home')
 
