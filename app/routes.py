@@ -5,6 +5,7 @@ from app.models import Classifier, Conversation
 from app.aux_functions import xlsxparser, worker
 import threading, queue, pandas as pd, json
 
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -12,7 +13,7 @@ def index():
         db.session.query(Conversation).all()
         flash('worked')
     except Exception as e:
-
+        db.create_all()
         flash(e)
     session['classif_name'] = None
     return render_template('index.html', title='Home')
