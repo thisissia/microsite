@@ -104,8 +104,13 @@ def newClassifier():
 
     if form.validate_on_submit():
         try:
+            flash('1')
             value1 = xlsxpars(form.good)
+            flash('2')
+
             value2 = xlsxpars(form.bad)
+
+            flash('3')
 
             if not value1[0]:
                 flash(value1[1])
@@ -117,14 +122,23 @@ def newClassifier():
                 g_df = value1[1]
                 b_df = value2[1]
 
+            flash('4')
+
             newModel = Classifier(name=form.name.data)
+            flash('5')
             db.session.add(newModel)
+            flash('6')
             session['classif_name'] = form.name.data
 
+            flash('7')
             gaps_good, duration_good, ts_g, te_g, si_g = xlsxparser(g_df)
+            flash('8')
             gaps_bad, duration_bad, ts, te, si = xlsxparser(b_df)
+            flash('9')
             file_name_g = g_df.columns.levels[0].values
+            flash('10')
             file_name_b = b_df.columns.levels[0].values
+            flash('11')
 
             for i, v in enumerate(duration_bad):
                 newConversation = Conversation(file_name=str(file_name_b[i]), types=False,
